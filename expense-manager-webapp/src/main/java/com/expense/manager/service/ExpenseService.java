@@ -1,8 +1,8 @@
 package com.expense.manager.service;
 
-import java.math.BigDecimal;
-import java.sql.Date;
+import java.text.ParseException;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
@@ -23,21 +23,7 @@ public class ExpenseService {
 	private final ModelMapper modelMapper;
 	
 	public List<ExpenseDTO> getAllExpense(){
-		
-		Expense expense = new Expense();
-		expense.setName("bill");
-		expense.setDescription("water bill");
-		expense.setAmount(new BigDecimal(700.00));
-		expense.setDate(new Date(System.currentTimeMillis()));
-		expenseRepository.save(expense);
-		expense = new Expense();
-		expense.setName("bill");
-		expense.setDescription("eletricty bill");
-		expense.setAmount(new BigDecimal(200.00));
-		expense.setDate(new Date(System.currentTimeMillis()));
-		expenseRepository.save(expense);
-		
-		
+			
 		List<Expense> list =  expenseRepository.findAll();
 		
 		List<ExpenseDTO> expenseList = list.stream().map(this :: mapToDTO).collect(Collectors.toList());
@@ -49,6 +35,31 @@ public class ExpenseService {
 		ExpenseDTO expenseDTO = modelMapper.map(expense, ExpenseDTO.class);
 		expenseDTO.setDateString(DateTimeUtil.convertDateToString(expense.getDate()));
 		return expenseDTO;
+	}
+	
+	public ExpenseDTO saveExpenseDetails(ExpenseDTO expenseDTO) throws ParseException {
+		//map dto to entity
+		Expense expense =mapToEntity(expenseDTO);
+		
+		//save entity to db
+		expense = expenseRepository.save(expense);
+		
+		//map entity to dto
+		return mapToDTO(expense);
+	}
+
+	private Expense mapToEntity(ExpenseDTO expenseDTO) throws ParseException {
+		//map dto to entity
+		Expense expense = modelMapper.map(expenseDTO,Expense.class);
+		//generate the expense id
+		expense.setExpenseId(UUID.randomUUID().toString());
+		
+		//set the expense date
+		expense.setDate(DateTimeUtil.convertStringToDate(expenseDTO.getDateString()));
+		
+		return expense;
+		
+		
 	}
 
 }
