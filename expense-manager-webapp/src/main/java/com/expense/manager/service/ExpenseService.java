@@ -2,6 +2,7 @@ package com.expense.manager.service;
 
 import java.text.ParseException;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -59,7 +60,19 @@ public class ExpenseService {
 		
 		return expense;
 		
+	}
+	
+	public void deleteExpense(String id) {
+		
+		Expense existingExpense = expenseRepository.findByExpenseId(id).orElseThrow(()-> new RuntimeException("expense not found for id"));
+		
+		expenseRepository.delete(existingExpense);
 		
 	}
-
+	
+	
+	
+	
+	
+	
 }

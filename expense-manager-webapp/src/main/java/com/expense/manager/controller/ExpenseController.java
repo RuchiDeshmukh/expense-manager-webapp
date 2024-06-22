@@ -7,6 +7,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.expense.manager.dto.ExpenseDTO;
 import com.expense.manager.service.ExpenseService;
@@ -37,6 +38,11 @@ public class ExpenseController {
 	public String saveOrUpdateExpenseDetails(@ModelAttribute("expense") ExpenseDTO expenseDTO) throws ParseException {
 		expenseService.saveExpenseDetails(expenseDTO);
 		return "redirect:/expenses";
-		
+	}
+	
+	@GetMapping("/deleteExpense")
+	public String deleteExpense(@RequestParam String id) {
+		expenseService.deleteExpense(id);
+		return "redirect:/expenses";
 	}
 }
