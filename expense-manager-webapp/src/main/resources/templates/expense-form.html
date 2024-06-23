@@ -22,6 +22,9 @@
 		<br/><br/>
 		
 		<button type="submit"> Submit </button>
+		
+		<input type="hidden" th:field="*{id}">
+		<input type="hidden" th:field="*{expenseId}">
 	</form>
 	<script th:src="@{/js/jquery.js}"></script>
 	<script th:src="@{/js/jquery-ui.js}"></script>

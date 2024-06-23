@@ -45,4 +45,11 @@ public class ExpenseController {
 		expenseService.deleteExpense(id);
 		return "redirect:/expenses";
 	}
+	
+	@GetMapping("/updateExpense")
+	public String updateExpense(@RequestParam String id, Model model) {
+		ExpenseDTO expenseDTO = expenseService.getExpenseId(id);
+		model.addAttribute("expense", expenseDTO);
+		return "expense-form";
+	}
 }
