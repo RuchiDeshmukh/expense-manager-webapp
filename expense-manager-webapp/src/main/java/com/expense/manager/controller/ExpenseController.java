@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.expense.manager.dto.ExpenseDTO;
+import com.expense.manager.dto.ExpenseFilterDTO;
 import com.expense.manager.service.ExpenseService;
 
 import lombok.RequiredArgsConstructor;
@@ -23,8 +24,8 @@ public class ExpenseController {
 
 	@GetMapping("/expenses")
 	public String showExpenseList(Model model) {
-		
 		model.addAttribute("expenses",expenseService.getAllExpense());
+		model.addAttribute("filter", new ExpenseFilterDTO());
 		return "expenses-list";
 	}
 	
