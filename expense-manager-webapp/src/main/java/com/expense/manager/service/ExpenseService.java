@@ -1,9 +1,11 @@
 package com.expense.manager.service;
 
+import java.math.BigDecimal;
 import java.sql.Date;
 import java.text.ParseException;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Locale;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -15,6 +17,7 @@ import com.expense.manager.dto.ExpenseFilterDTO;
 import com.expense.manager.entity.Expense;
 import com.expense.manager.repository.ExpenseRepository;
 import com.expense.manager.util.DateTimeUtil;
+import com.ibm.icu.text.NumberFormat;
 
 import lombok.RequiredArgsConstructor;
 
@@ -103,6 +106,17 @@ public class ExpenseService {
 			filteredList.sort(Comparator.comparing(ExpenseDTO::getAmount).reversed());
 		}
 		return filteredList;
+	}
+	
+	public String totalingExpenses(List<ExpenseDTO> expenses) {
+		BigDecimal sum = new BigDecimal(0);
+		BigDecimal total = expenses.stream()
+								   .map(x->x.getAmount().add(sum))
+								   .reduce(BigDecimal.ZERO, BigDecimal :: add);
+		NumberFormat format = NumberFormat.getCurrencyInstance(new Locale("en", "in"));
+		
+		
+		return format.format(total).substring(2);
 	}
 
 	

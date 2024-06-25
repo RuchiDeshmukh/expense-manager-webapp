@@ -1,6 +1,8 @@
 package com.expense.manager.controller;
 
+import java.math.BigDecimal;
 import java.text.ParseException;
+import java.util.List;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -24,8 +26,11 @@ public class ExpenseController {
 
 	@GetMapping("/expenses")
 	public String showExpenseList(Model model) {
-		model.addAttribute("expenses",expenseService.getAllExpense());
+		List<ExpenseDTO> list = expenseService.getAllExpense();
+		model.addAttribute("expenses",list);
 		model.addAttribute("filter", new ExpenseFilterDTO());
+		String totalExpenses =  expenseService.totalingExpenses(list);
+		model.addAttribute("totalExpenses", totalExpenses);
 		return "expenses-list";
 	}
 	
