@@ -16,6 +16,9 @@
 		<div th:if="${param.error}">
 			Invalid username or password.
 		</div>
+		<div th:if="${param.logout}">
+			You have been logged out from the application.
+		</div>
 		<form th:action="@{/login}" method="post" id="loginForm">
 			<input type="text" name="email" placeholder="Enter email"></input>
 			<br/><br/>
