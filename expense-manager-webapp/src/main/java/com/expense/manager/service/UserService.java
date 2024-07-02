@@ -3,6 +3,7 @@ package com.expense.manager.service;
 import java.util.UUID;
 
 import org.modelmapper.ModelMapper;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.expense.manager.dto.UserDTO;
@@ -19,8 +20,11 @@ public class UserService {
 	
 	private final ModelMapper modelMapper;
 	
+	private final PasswordEncoder passwordEncoder;
+	
 	
 	public void save(UserDTO userDTO) {
+		userDTO.setPassword(passwordEncoder.encode(userDTO.getPassword()));
 		User user = mapToEntity(userDTO);
 		user.setUserId(UUID.randomUUID().toString());
 		userRepository.save(user);

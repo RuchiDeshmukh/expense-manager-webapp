@@ -13,6 +13,9 @@
 	</div>
 	
 	<div>
+		<div th:if="${param.error}">
+			Invalid username or password.
+		</div>
 		<form th:action="@{/login}" method="post" id="loginForm">
 			<input type="text" name="email" placeholder="Enter email"></input>
 			<br/><br/>
