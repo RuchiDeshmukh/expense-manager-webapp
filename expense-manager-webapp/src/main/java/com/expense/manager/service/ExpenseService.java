@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import com.expense.manager.dto.ExpenseDTO;
 import com.expense.manager.dto.ExpenseFilterDTO;
 import com.expense.manager.entity.Expense;
+import com.expense.manager.entity.User;
 import com.expense.manager.repository.ExpenseRepository;
 import com.expense.manager.util.DateTimeUtil;
 import com.ibm.icu.text.NumberFormat;
@@ -27,13 +28,13 @@ public class ExpenseService {
 	
 	private final ExpenseRepository expenseRepository;
 	private final ModelMapper modelMapper;
+	private final UserService userService;
+	
 	
 	public List<ExpenseDTO> getAllExpense(){
-			
-		List<Expense> list =  expenseRepository.findAll();
-		
+		User user = userService.getLoggedInUser();
+		List<Expense> list =  expenseRepository.findByUserId(user.getId());
 		List<ExpenseDTO> expenseList = list.stream().map(this :: mapToDTO).collect(Collectors.toList());
-		
 		return expenseList;
 	}
 	
@@ -45,8 +46,9 @@ public class ExpenseService {
 	
 	public ExpenseDTO saveExpenseDetails(ExpenseDTO expenseDTO) throws ParseException {
 		//map dto to entity
-		Expense expense =mapToEntity(expenseDTO);
-		
+		Expense expense = mapToEntity(expenseDTO);
+		//add logged in user to the expense entity
+		expense.setUser(userService.getLoggedInUser());
 		//save entity to db
 		expense = expenseRepository.save(expense);
 		
@@ -98,7 +100,8 @@ public class ExpenseService {
 		Date startDate = !startDateString.isEmpty() ? DateTimeUtil.convertStringToDate(expenseFilterDTO.getStartDate()) : new Date(0);
 		Date endDate = !endDateString.isEmpty() ? DateTimeUtil.convertStringToDate(expenseFilterDTO.getStartDate()) : new Date(System.currentTimeMillis());
 		
-		List<Expense> list = expenseRepository.findByNameContainingAndDateBetween(keyword,startDate,endDate);
+		User user = userService.getLoggedInUser();
+		List<Expense> list = expenseRepository.findByNameContainingAndDateBetweenAndUserId(keyword,startDate,endDate,user.getId());
 		List<ExpenseDTO> filteredList = list.stream().map(this::mapToDTO).collect(Collectors.toList());
 		if(sortBy.equals("date")) {
 			filteredList.sort(Comparator.comparing(ExpenseDTO::getDate));

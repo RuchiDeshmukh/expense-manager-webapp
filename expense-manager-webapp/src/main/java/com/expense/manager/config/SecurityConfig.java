@@ -5,6 +5,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
@@ -19,6 +20,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 
 	private final CustomUserDetailsService customUserDetailsService;
 	
+	
+	  @Override public void configure(WebSecurity web) throws Exception { 
+		  web
+		  	.ignoring() .antMatchers("/h2/**");
+	  }
+	 
+	 
 	@Override
     protected void configure(HttpSecurity http) throws Exception {
         http.cors().and().csrf().disable()
@@ -26,7 +34,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
                 // add your resources here. By default, spring security blocks all resources that is not under /resources/**
                 .antMatchers(HttpMethod.GET, "/","/resources/**", "/js/**", "/css/**", "/images/**").permitAll()
                 // prevent spring security from blocking some pages that doesn't require authentication to be access here.
-                .antMatchers("/", "/login","/register").permitAll()
+                .antMatchers("/", "/login","/register","/h2/**").permitAll()
                 .anyRequest().authenticated()
             .and()
             // login configuration
