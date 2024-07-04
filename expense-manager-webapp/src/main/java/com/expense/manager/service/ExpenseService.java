@@ -16,6 +16,7 @@ import com.expense.manager.dto.ExpenseDTO;
 import com.expense.manager.dto.ExpenseFilterDTO;
 import com.expense.manager.entity.Expense;
 import com.expense.manager.entity.User;
+import com.expense.manager.exception.ExpenseNotFoundException;
 import com.expense.manager.repository.ExpenseRepository;
 import com.expense.manager.util.DateTimeUtil;
 import com.ibm.icu.text.NumberFormat;
@@ -86,7 +87,7 @@ public class ExpenseService {
 	}
 	
 	private Expense getExpense(String id) {
-		Expense existingExpense = expenseRepository.findByExpenseId(id).orElseThrow(()-> new RuntimeException("expense not found for id"));
+		Expense existingExpense = expenseRepository.findByExpenseId(id).orElseThrow(()-> new ExpenseNotFoundException("expense not found for id"));
 		return existingExpense;
 	}
 	
