@@ -23,7 +23,6 @@ public class ExpenseFilterController {
 
 	@GetMapping("/filterExpenses")
 	public String filterExpenses(@ModelAttribute("filter") ExpenseFilterDTO expenseFilterDTO, Model model) throws ParseException {
-		System.out.println("printing the filter dto :"+expenseFilterDTO);
 		List<ExpenseDTO> list = expenseService.getFilteredExpenses(expenseFilterDTO);
 		model.addAttribute("expenses", list);
 		String totalExpenses =  expenseService.totalingExpenses(list);

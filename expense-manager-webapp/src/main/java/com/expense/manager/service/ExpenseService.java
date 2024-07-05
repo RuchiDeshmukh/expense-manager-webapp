@@ -3,6 +3,7 @@ package com.expense.manager.service;
 import java.math.BigDecimal;
 import java.sql.Date;
 import java.text.ParseException;
+import java.time.LocalDate;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
@@ -34,7 +35,10 @@ public class ExpenseService {
 	
 	public List<ExpenseDTO> getAllExpense(){
 		User user = userService.getLoggedInUser();
-		List<Expense> list =  expenseRepository.findByUserId(user.getId());
+		List<Expense> list =  expenseRepository.findByDateBetweenAndUserId(
+												Date.valueOf(LocalDate.now().withDayOfMonth(1)),
+												Date.valueOf(LocalDate.now()), 
+												user.getId());
 		List<ExpenseDTO> expenseList = list.stream().map(this :: mapToDTO).collect(Collectors.toList());
 		return expenseList;
 	}
@@ -48,6 +52,10 @@ public class ExpenseService {
 	public ExpenseDTO saveExpenseDetails(ExpenseDTO expenseDTO) throws ParseException {
 		//map dto to entity
 		Expense expense = mapToEntity(expenseDTO);
+		//handle exception for future date
+		if(!expense.getDate().before(new java.util.Date())) {
+			throw new RuntimeException("Future date is not allowed.");
+		}
 		//add logged in user to the expense entity
 		expense.setUser(userService.getLoggedInUser());
 		//save entity to db
@@ -99,7 +107,7 @@ public class ExpenseService {
 		String endDateString = expenseFilterDTO.getStartDate();
 		
 		Date startDate = !startDateString.isEmpty() ? DateTimeUtil.convertStringToDate(expenseFilterDTO.getStartDate()) : new Date(0);
-		Date endDate = !endDateString.isEmpty() ? DateTimeUtil.convertStringToDate(expenseFilterDTO.getStartDate()) : new Date(System.currentTimeMillis());
+		Date endDate = !endDateString.isEmpty() ? DateTimeUtil.convertStringToDate(expenseFilterDTO.getEndDate()) : new Date(System.currentTimeMillis());
 		
 		User user = userService.getLoggedInUser();
 		List<Expense> list = expenseRepository.findByNameContainingAndDateBetweenAndUserId(keyword,startDate,endDate,user.getId());

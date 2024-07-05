@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.expense.manager.dto.ExpenseDTO;
 import com.expense.manager.dto.ExpenseFilterDTO;
 import com.expense.manager.service.ExpenseService;
+import com.expense.manager.util.DateTimeUtil;
 import com.expense.manager.validator.ExpenseValidator;
 
 import lombok.RequiredArgsConstructor;
@@ -31,7 +32,8 @@ public class ExpenseController {
 	public String showExpenseList(Model model) {
 		List<ExpenseDTO> list = expenseService.getAllExpense();
 		model.addAttribute("expenses",list);
-		model.addAttribute("filter", new ExpenseFilterDTO());
+		model.addAttribute("filter", new ExpenseFilterDTO(DateTimeUtil.getCurrentMonthStartDate(),
+														  DateTimeUtil.getCurrentMonthDate()));
 		String totalExpenses =  expenseService.totalingExpenses(list);
 		model.addAttribute("totalExpenses", totalExpenses);
 		return "expenses-list";
