@@ -47,6 +47,11 @@ $(function() {
                     required: 'Please enter confirm password',
                     equalTo: 'Password and confirm password should be same'
                 }
+            },
+            errorElement: 'em',
+            errorPlacement: function(error, element) {
+                error.addClass('help-block');
+                error.insertAfter(element);
             }
 
         })

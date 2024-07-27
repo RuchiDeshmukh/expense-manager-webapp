@@ -26,6 +26,8 @@ public class ExpenseDTO {
 	@Size(min = 3, message = "Expense name should be at least {min} characters")
 	private String name;
 	
+	private String category;
+	
 	private String description;
 	
 	@NotNull(message="Expense amount should not be null")

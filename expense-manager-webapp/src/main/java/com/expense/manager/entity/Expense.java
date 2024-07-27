@@ -32,6 +32,8 @@ public class Expense {
 	
 	private String name;
 	
+	private String category;
+	
 	private String description;
 	
 	private BigDecimal amount;

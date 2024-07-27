@@ -24,7 +24,12 @@ $(function() {
                     required: 'Please enter the password',
                 }
                
-            }
+            },
+            errorElement: 'em',
+            errorPlacement: function(error, element){
+				error.addClass('help-block');
+				error.insertAfter(element);
+			}
 
         })
     }
