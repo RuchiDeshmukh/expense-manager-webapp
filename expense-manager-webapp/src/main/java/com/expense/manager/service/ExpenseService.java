@@ -7,6 +7,7 @@ import java.time.LocalDate;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -101,9 +102,9 @@ public class ExpenseService {
 	
 	
 	public List<ExpenseDTO> getFilteredExpenses(ExpenseFilterDTO expenseFilterDTO) throws ParseException{
-		String keyword = expenseFilterDTO.getKeyword();
-		String sortBy = expenseFilterDTO.getSortBy();
-		String startDateString =expenseFilterDTO.getStartDate();
+		String keyword = Objects.isNull(expenseFilterDTO.getKeyword()) ? "" : expenseFilterDTO.getKeyword();
+		String sortBy = Objects.isNull(expenseFilterDTO.getSortBy()) ? "" : expenseFilterDTO.getSortBy();
+		String startDateString = expenseFilterDTO.getStartDate();
 		String endDateString = expenseFilterDTO.getStartDate();
 		
 		Date startDate = !startDateString.isEmpty() ? DateTimeUtil.convertStringToDate(expenseFilterDTO.getStartDate()) : new Date(0);
@@ -111,6 +112,10 @@ public class ExpenseService {
 		
 		User user = userService.getLoggedInUser();
 		List<Expense> list = expenseRepository.findByNameContainingAndDateBetweenAndUserId(keyword,startDate,endDate,user.getId());
+		if(list.isEmpty()) {
+			 new ExpenseNotFoundException("No expenses found for selected time period");
+			
+		}
 		List<ExpenseDTO> filteredList = list.stream().map(this::mapToDTO).collect(Collectors.toList());
 		if(sortBy.equals("date")) {
 			filteredList.sort(Comparator.comparing(ExpenseDTO::getDate));

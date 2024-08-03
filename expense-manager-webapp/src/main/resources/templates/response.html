@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="https://thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Expense Manager</title>
     <link rel="stylesheet" th:href="@{/css/bootstrap.css}" />
     <link rel="stylesheet" th:href="@{/css/base.css}" />
     <link rel="stylesheet" th:href="@{/css/response.css}" />
@@ -31,7 +31,7 @@
   </div>
   <div th:if="${serverError}" class="container p-5 my-5 border container-top-margin">
       <h1>Contact Administrator</h1>
-      <p>Something went wrong! Please contact administrator or write an email to bushan1992@zohomail.in</p>
+      <p>Something went wrong! Please contact administrator or write an email to rd@gmail.com</p>
       <p th:text="${message}"></p>
       <a th:href="@{/expenses}" class="btn button_default">Home</a>
   </div>
